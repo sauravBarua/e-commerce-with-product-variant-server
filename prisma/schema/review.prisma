@@ -1,0 +1,17 @@
+model Review {
+  id         String   @id @default(uuid())
+  customerId String
+  productId  String
+  orderId    String   @unique
+  rating     Float
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id])
+  order      Order    @relation(fields: [orderId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@index([customerId])
+  @@index([productId])
+  @@map("reviews")
+}

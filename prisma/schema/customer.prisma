@@ -1,0 +1,19 @@
+model Customer {
+  id            String     @id @default(uuid())
+  name          String
+  contactNumber String?
+  isDeleted     Boolean    @default(false)
+  userId        String     @unique
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  email         String     @unique
+  cart          Cart?
+  user          User       @relation(fields: [userId], references: [id])
+  orders        Order[]
+  reviews       Review[]
+  watchList     WatchList?
+
+  @@index([userId])
+  @@index([isDeleted])
+  @@map("customers")
+}

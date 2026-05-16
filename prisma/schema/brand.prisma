@@ -1,0 +1,13 @@
+model Brand {
+  id        String    @id @default(uuid())
+  name      String    @unique @db.VarChar(100)
+  slug      String?   @unique
+  logo      String?   @db.VarChar(512)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@index([isActive])
+  @@map("brands")
+}

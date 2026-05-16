@@ -1,0 +1,24 @@
+model WatchList {
+  id         String          @id @default(uuid())
+  customerId String          @unique
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  customer   Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items      WatchListItem[]
+
+  @@map("watch_lists")
+}
+
+model WatchListItem {
+  id          String    @id @default(uuid())
+  watchListId String
+  productId   String
+  createdAt   DateTime  @default(now())
+  watchList   WatchList @relation(fields: [watchListId], references: [id], onDelete: Cascade)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([watchListId, productId])
+  @@index([watchListId])
+  @@index([productId])
+  @@map("watch_list_items")
+}
