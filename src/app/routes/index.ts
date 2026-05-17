@@ -21,7 +21,7 @@ router.use("/addresses", AddressRoutes);
 router.use("/brands", BrandRoutes);
 router.use("/categories", CategoryRoutes);
 router.use("/orders", OrderRoutes);
-router.use("/inventory", InventoryRoutes);
+router.use("/inventories", InventoryRoutes);
 router.use("/products", ProductRoutes);
 router.use("/payments", PaymentRoutes);
 router.use("/reviews", ReviewRoutes);

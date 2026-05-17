@@ -38,7 +38,17 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                 where: { id: orderId },
                 include: {
                     customer: true,
-                    orderItems: { include: { product: true } },
+                    orderItems: {
+                        include: {
+                            variant: {
+                                include: {
+                                    colorGroup: {
+                                        include: { product: true },
+                                    },
+                                },
+                            },
+                        },
+                    },
                     payment: true
                 }
             });
@@ -56,7 +66,7 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                         id: orderId
                     },
                     data: {
-                        paymentStatus: session.payment_status === "paid" ? PaymentStatus.PAID : PaymentStatus.UNPAID
+                        paymentStatus: session.payment_status === "paid" ? PaymentStatus.PAID : PaymentStatus.FAILED
                     }
                 });
 
@@ -72,9 +82,9 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                             customerName: order.customer.name,
                             customerEmail: order.customer.email,
                             orderItems: order.orderItems.map((i) => ({
-                                name: i.product.name,
+                                name: i.variant.colorGroup.product.name,
                                 quantity: i.quantity,
-                                price: i.product.price,
+                                price: i.priceAtOrder,
                             })),
                             orderDate: order.createdAt.toString(),
                             amount: order.payment?.amount || 0,
@@ -102,7 +112,7 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                         id: paymentId
                     },
                     data: {
-                        status: session.payment_status === "paid" ? PaymentStatus.PAID : PaymentStatus.UNPAID,
+                        status: session.payment_status === "paid" ? PaymentStatus.PAID : PaymentStatus.FAILED,
                         paymentGatewayData: session,
                         invoiceUrl: invoiceUrl, // Store invoice URL
                         stripeEventId: event.id // Store event ID for idempotency
@@ -125,9 +135,9 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                             transactionId: order.payment?.transactionId || "",
                             paymentDate: new Date().toLocaleDateString(),
                             orderItems: order.orderItems.map((i) => ({
-                                name: i.product.name,
+                                name: i.variant.colorGroup.product.name,
                                 quantity: i.quantity,
-                                price: i.product.price,
+                                price: i.priceAtOrder,
                             })),
                             orderDate: new Date(order.createdAt).toLocaleDateString(),
                             amount: order.payment?.amount || 0,
@@ -178,7 +188,17 @@ const createCheckoutSession = async (orderId: string, userId: string) => {
         where: { id: orderId },
         include: {
             customer: true,
-            orderItems: { include: { product: true } },
+            orderItems: {
+                include: {
+                    variant: {
+                        include: {
+                            colorGroup: {
+                                include: { product: true, images: { take: 1 } },
+                            },
+                        },
+                    },
+                },
+            },
         },
     });
 
@@ -194,16 +214,22 @@ const createCheckoutSession = async (orderId: string, userId: string) => {
         throw new Error("Order is already paid");
     }
 
-    const lineItems = order.orderItems.map((item) => ({
-        price_data: {
-            currency: "usd",
-            product_data: { name: item.product.name },
-            unit_amount: Math.round(item.product.price * 100),
-        },
-        quantity: item.quantity,
-    }));
+    const lineItems = order.orderItems.map((item) => {
+        const image = item.variant.colorGroup.images[0]?.url;
+        return {
+            price_data: {
+                currency: "usd",
+                product_data: {
+                    name: item.variant.colorGroup.product.name,
+                    ...(image && { images: [image] }),
+                },
+                unit_amount: Math.round(item.priceAtOrder * 100),
+            },
+            quantity: item.quantity,
+        };
+    });
 
-    const amount = order.orderItems.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    const amount = order.totalAmount;
 
     // Upsert payment record first so we have the paymentId for metadata
     const payment = await prisma.payment.upsert({

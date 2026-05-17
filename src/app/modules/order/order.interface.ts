@@ -1,7 +1,7 @@
 import { OrderStatus } from "../../../generated/prisma/enums";
 
 export interface IOrderItem {
-  productId: string;
+  variantId: string;
   quantity: number;
 }
 

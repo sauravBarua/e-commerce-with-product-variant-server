@@ -5,7 +5,7 @@ export const createOrderZodSchema = z.object({
   items: z
     .array(
       z.object({
-        productId: z.string().min(1, "Product ID is required"),
+        variantId: z.string().min(1, "Variant ID is required"),
         quantity: z.number().int().min(1, "Quantity must be at least 1"),
       }),
     )

@@ -10,7 +10,17 @@ import { ICreateOrderPayload, IUpdateOrderStatusPayload } from "./order.interfac
 const orderInclude = {
   orderItems: {
     include: {
-      product: { select: { id: true, name: true, price: true, images: true } },
+      variant: {
+        include: {
+          colorGroup: {
+            include: {
+              product: { select: { id: true, name: true } },
+              images: { take: 1 },
+            },
+          },
+          attributes: true,
+        },
+      },
     },
   },
   address: true,
@@ -37,43 +47,45 @@ const createOrder = async (user: IRequestUser, payload: ICreateOrderPayload) => 
   }
 
   const order = await prisma.$transaction(async (tx) => {
+    const variantPrices = new Map<string, number>();
+    let totalAmount = 0;
+
     for (const item of items) {
-      const product = await tx.product.findUnique({
-        where: { id: item.productId },
+      const variant = await tx.productVariant.findUnique({
+        where: { id: item.variantId },
+        include: { inventory: true },
       });
 
-      if (!product) {
-        throw new AppError(status.NOT_FOUND, `Product ${item.productId} not found`);
+      if (!variant) {
+        throw new AppError(status.NOT_FOUND, `Variant ${item.variantId} not found`);
       }
 
-      const inventory = await tx.inventory.findUnique({
-        where: { productId: item.productId },
-      });
-
-      if (!inventory) {
-        throw new AppError(
-          status.CONFLICT,
-          `"${product.name}" is out of stock`,
-        );
+      if (!variant.inventory) {
+        throw new AppError(status.CONFLICT, `Variant ${item.variantId} has no inventory record`);
       }
 
-      const available = inventory.quantity - inventory.reservedQuantity;
+      const available = variant.inventory.quantity - variant.inventory.reservedQuantity;
       if (available < item.quantity) {
         throw new AppError(
           status.CONFLICT,
-          `Insufficient stock for "${product.name}". Available: ${available}`,
+          `Insufficient stock for variant ${item.variantId}. Available: ${available}`,
         );
       }
+
+      variantPrices.set(item.variantId, variant.price);
+      totalAmount += variant.price * item.quantity;
     }
 
     const newOrder = await tx.order.create({
       data: {
         customerId: customer.id,
         addressId: addressId ?? null,
+        totalAmount,
         orderItems: {
           create: items.map((item) => ({
-            productId: item.productId,
+            variantId: item.variantId,
             quantity: item.quantity,
+            priceAtOrder: variantPrices.get(item.variantId)!,
           })),
         },
       },
@@ -82,7 +94,7 @@ const createOrder = async (user: IRequestUser, payload: ICreateOrderPayload) => 
 
     for (const item of items) {
       await tx.inventory.update({
-        where: { productId: item.productId },
+        where: { variantId: item.variantId },
         data: { reservedQuantity: { increment: item.quantity } },
       });
     }
@@ -153,7 +165,7 @@ const updateOrderStatus = async (id: string, payload: IUpdateOrderStatusPayload)
     if (payload.status === OrderStatus.DELIVERED) {
       for (const item of updated.orderItems) {
         await tx.inventory.update({
-          where: { productId: item.productId },
+          where: { variantId: item.variantId },
           data: {
             reservedQuantity: { decrement: item.quantity },
             quantity: { decrement: item.quantity },
@@ -165,7 +177,7 @@ const updateOrderStatus = async (id: string, payload: IUpdateOrderStatusPayload)
     if (payload.status === OrderStatus.CANCELLED) {
       for (const item of updated.orderItems) {
         await tx.inventory.update({
-          where: { productId: item.productId },
+          where: { variantId: item.variantId },
           data: { reservedQuantity: { decrement: item.quantity } },
         });
       }
@@ -203,7 +215,7 @@ const cancelOrder = async (id: string, user: IRequestUser) => {
 
     for (const item of order.orderItems) {
       await tx.inventory.update({
-        where: { productId: item.productId },
+        where: { variantId: item.variantId },
         data: { reservedQuantity: { decrement: item.quantity } },
       });
     }
