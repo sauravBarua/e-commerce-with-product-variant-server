@@ -235,9 +235,18 @@ CREATE TABLE "product_specifications" (
 );
 
 -- CreateTable
-CREATE TABLE "product_variants" (
+CREATE TABLE "product_color_groups" (
     "id" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
+    "colorValue" TEXT NOT NULL,
+
+    CONSTRAINT "product_color_groups_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "product_variants" (
+    "id" TEXT NOT NULL,
+    "colorGroupId" TEXT NOT NULL,
     "sku" TEXT,
     "price" DOUBLE PRECISION NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -263,7 +272,7 @@ CREATE TABLE "product_images" (
     "altText" TEXT,
     "isPrimary" BOOLEAN NOT NULL DEFAULT false,
     "sortOrder" INTEGER NOT NULL DEFAULT 0,
-    "variantId" TEXT NOT NULL,
+    "colorGroupId" TEXT NOT NULL,
 
     CONSTRAINT "product_images_pkey" PRIMARY KEY ("id")
 );
@@ -452,16 +461,19 @@ CREATE INDEX "products_isActive_idx" ON "products"("isActive");
 CREATE INDEX "product_specifications_productId_idx" ON "product_specifications"("productId");
 
 -- CreateIndex
+CREATE INDEX "product_color_groups_productId_idx" ON "product_color_groups"("productId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "product_variants_sku_key" ON "product_variants"("sku");
 
 -- CreateIndex
-CREATE INDEX "product_variants_productId_idx" ON "product_variants"("productId");
+CREATE INDEX "product_variants_colorGroupId_idx" ON "product_variants"("colorGroupId");
 
 -- CreateIndex
 CREATE INDEX "product_variant_attributes_variantId_idx" ON "product_variant_attributes"("variantId");
 
 -- CreateIndex
-CREATE INDEX "product_images_variantId_idx" ON "product_images"("variantId");
+CREATE INDEX "product_images_colorGroupId_idx" ON "product_images"("colorGroupId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "inventories_variantId_key" ON "inventories"("variantId");
@@ -539,13 +551,16 @@ ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("c
 ALTER TABLE "product_specifications" ADD CONSTRAINT "product_specifications_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product_variants" ADD CONSTRAINT "product_variants_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "product_color_groups" ADD CONSTRAINT "product_color_groups_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "product_variants" ADD CONSTRAINT "product_variants_colorGroupId_fkey" FOREIGN KEY ("colorGroupId") REFERENCES "product_color_groups"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "product_variant_attributes" ADD CONSTRAINT "product_variant_attributes_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "product_variants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product_images" ADD CONSTRAINT "product_images_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "product_variants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "product_images" ADD CONSTRAINT "product_images_colorGroupId_fkey" FOREIGN KEY ("colorGroupId") REFERENCES "product_color_groups"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "inventories" ADD CONSTRAINT "inventories_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "product_variants"("id") ON DELETE CASCADE ON UPDATE CASCADE;

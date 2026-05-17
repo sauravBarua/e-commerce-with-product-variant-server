@@ -5,6 +5,7 @@ import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { ProductController } from "./product.controller";
 import {
+  createColorGroupZodSchema,
   createProductZodSchema,
   createVariantZodSchema,
   updateProductZodSchema,
@@ -38,39 +39,53 @@ router.delete(
   ProductController.deleteProduct,
 );
 
-// ── Variants ─────────────────────────────────────────────
+// ── Color Groups ──────────────────────────────────────────
 router.post(
-  "/:id/variants",
+  "/:id/color-groups",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  validateRequest(createColorGroupZodSchema),
+  ProductController.addColorGroup,
+);
+
+router.delete(
+  "/:id/color-groups/:colorGroupId",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  ProductController.deleteColorGroup,
+);
+
+// ── Variants (under color groups) ────────────────────────
+router.post(
+  "/:id/color-groups/:colorGroupId/variants",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(createVariantZodSchema),
   ProductController.addVariant,
 );
 
 router.patch(
-  "/:id/variants/:variantId",
+  "/:id/color-groups/:colorGroupId/variants/:variantId",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(updateVariantZodSchema),
   ProductController.updateVariant,
 );
 
 router.delete(
-  "/:id/variants/:variantId",
+  "/:id/color-groups/:colorGroupId/variants/:variantId",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   ProductController.deleteVariant,
 );
 
-// ── Variant Images ────────────────────────────────────────
+// ── Color Group Images ────────────────────────────────────
 router.post(
-  "/:id/variants/:variantId/images",
+  "/:id/color-groups/:colorGroupId/images",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   multerUpload.array("images"),
-  ProductController.uploadVariantImages,
+  ProductController.uploadColorGroupImages,
 );
 
 router.delete(
-  "/:id/variants/:variantId/images/:imageId",
+  "/:id/color-groups/:colorGroupId/images/:imageId",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  ProductController.deleteVariantImage,
+  ProductController.deleteColorGroupImage,
 );
 
 export const ProductRoutes = router;

@@ -66,10 +66,35 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const addVariant = catchAsync(async (req: Request, res: Response) => {
+const addColorGroup = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const variant = await ProductService.addVariant(id as string, req.body);
+  const colorGroup = await ProductService.addColorGroup(id as string, req.body);
+
+  sendResponse(res, {
+    httpStatusCode: status.CREATED,
+    success: true,
+    message: "Color group added successfully",
+    data: colorGroup,
+  });
+});
+
+const deleteColorGroup = catchAsync(async (req: Request, res: Response) => {
+  const { id, colorGroupId } = req.params;
+
+  await ProductService.deleteColorGroup(id as string, colorGroupId as string);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Color group deleted successfully",
+  });
+});
+
+const addVariant = catchAsync(async (req: Request, res: Response) => {
+  const { id, colorGroupId } = req.params;
+
+  const variant = await ProductService.addVariant(id as string, colorGroupId as string, req.body);
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
@@ -80,9 +105,14 @@ const addVariant = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateVariant = catchAsync(async (req: Request, res: Response) => {
-  const { id, variantId } = req.params;
+  const { id, colorGroupId, variantId } = req.params;
 
-  const variant = await ProductService.updateVariant(id as string, variantId as string, req.body);
+  const variant = await ProductService.updateVariant(
+    id as string,
+    colorGroupId as string,
+    variantId as string,
+    req.body,
+  );
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -93,9 +123,9 @@ const updateVariant = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteVariant = catchAsync(async (req: Request, res: Response) => {
-  const { id, variantId } = req.params;
+  const { id, colorGroupId, variantId } = req.params;
 
-  await ProductService.deleteVariant(id as string, variantId as string);
+  await ProductService.deleteVariant(id as string, colorGroupId as string, variantId as string);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -104,12 +134,16 @@ const deleteVariant = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const uploadVariantImages = catchAsync(async (req: Request, res: Response) => {
-  const { id, variantId } = req.params;
+const uploadColorGroupImages = catchAsync(async (req: Request, res: Response) => {
+  const { id, colorGroupId } = req.params;
   const files = req.files as Express.Multer.File[];
   const imageUrls = files.map((f) => f.path);
 
-  const result = await ProductService.uploadVariantImages(id as string, variantId as string, imageUrls);
+  const result = await ProductService.uploadColorGroupImages(
+    id as string,
+    colorGroupId as string,
+    imageUrls,
+  );
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
@@ -119,10 +153,14 @@ const uploadVariantImages = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteVariantImage = catchAsync(async (req: Request, res: Response) => {
-  const { id, variantId, imageId } = req.params;
+const deleteColorGroupImage = catchAsync(async (req: Request, res: Response) => {
+  const { id, colorGroupId, imageId } = req.params;
 
-  await ProductService.deleteVariantImage(id as string, variantId as string, imageId as string);
+  await ProductService.deleteColorGroupImage(
+    id as string,
+    colorGroupId as string,
+    imageId as string,
+  );
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -137,10 +175,12 @@ export const ProductController = {
   getProductById,
   updateProduct,
   deleteProduct,
+  addColorGroup,
+  deleteColorGroup,
   addVariant,
   updateVariant,
   deleteVariant,
-  uploadVariantImages,
-  deleteVariantImage,
+  uploadColorGroupImages,
+  deleteColorGroupImage,
 };
 

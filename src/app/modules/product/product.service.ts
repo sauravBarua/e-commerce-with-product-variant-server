@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { productSearchableFields } from "./product.constants";
 import {
+  ICreateColorGroupInput,
   ICreateProductPayload,
   ICreateVariantInput,
   IUpdateProductPayload,
@@ -19,7 +20,7 @@ const generateSlug = (name: string): string =>
     .replace(/[^a-z0-9-]/g, "");
 
 const createProduct = async (payload: ICreateProductPayload) => {
-  const { name, description, brandId, categoryId, isActive, specifications, variants } =
+  const { name, description, brandId, categoryId, isActive, specifications, colorGroups } =
     payload;
 
   const slug = generateSlug(name);
@@ -35,12 +36,17 @@ const createProduct = async (payload: ICreateProductPayload) => {
       specifications: specifications?.length
         ? { create: specifications }
         : undefined,
-      variants: {
-        create: variants.map((v) => ({
-          sku: v.sku,
-          price: v.price,
-          attributes: { create: v.attributes },
-          inventory: { create: { quantity: 0, reservedQuantity: 0 } },
+      colorGroups: {
+        create: colorGroups.map((cg) => ({
+          colorValue: cg.colorValue,
+          variants: {
+            create: cg.variants.map((v) => ({
+              sku: v.sku,
+              price: v.price,
+              attributes: { create: v.attributes },
+              inventory: { create: { quantity: 0, reservedQuantity: 0 } },
+            })),
+          },
         })),
       },
     },
@@ -48,11 +54,15 @@ const createProduct = async (payload: ICreateProductPayload) => {
       brand: true,
       category: true,
       specifications: true,
-      variants: {
+      colorGroups: {
         include: {
-          attributes: true,
           images: true,
-          inventory: true,
+          variants: {
+            include: {
+              attributes: true,
+              inventory: true,
+            },
+          },
         },
       },
     },
@@ -73,11 +83,15 @@ const getAllProducts = async (queryParams: IQueryParams) => {
       include: {
         brand: true,
         category: true,
-        variants: {
+        colorGroups: {
           include: {
-            attributes: true,
             images: { where: { isPrimary: true }, take: 1 },
-            inventory: { select: { quantity: true, reservedQuantity: true } },
+            variants: {
+              include: {
+                attributes: true,
+                inventory: { select: { quantity: true, reservedQuantity: true } },
+              },
+            },
           },
         },
       },
@@ -93,11 +107,15 @@ const getProductById = async (id: string) => {
       brand: true,
       category: true,
       specifications: true,
-      variants: {
+      colorGroups: {
         include: {
-          attributes: true,
           images: { orderBy: { sortOrder: "asc" } },
-          inventory: true,
+          variants: {
+            include: {
+              attributes: true,
+              inventory: true,
+            },
+          },
         },
       },
       reviews: {
@@ -149,16 +167,74 @@ const deleteProduct = async (id: string) => {
   await prisma.product.delete({ where: { id } });
 };
 
-const addVariant = async (productId: string, payload: ICreateVariantInput) => {
+const addColorGroup = async (productId: string, payload: ICreateColorGroupInput) => {
   const product = await prisma.product.findUnique({ where: { id: productId } });
 
   if (!product) {
     throw new AppError(status.NOT_FOUND, "Product not found");
   }
 
-  const variant = await prisma.productVariant.create({
+  const colorGroup = await prisma.productColorGroup.create({
     data: {
       productId,
+      colorValue: payload.colorValue,
+      variants: {
+        create: payload.variants.map((v) => ({
+          sku: v.sku,
+          price: v.price,
+          attributes: { create: v.attributes },
+          inventory: { create: { quantity: 0, reservedQuantity: 0 } },
+        })),
+      },
+    },
+    include: {
+      images: true,
+      variants: {
+        include: {
+          attributes: true,
+          inventory: true,
+        },
+      },
+    },
+  });
+
+  return colorGroup;
+};
+
+const deleteColorGroup = async (productId: string, colorGroupId: string) => {
+  const colorGroup = await prisma.productColorGroup.findFirst({
+    where: { id: colorGroupId, productId },
+  });
+
+  if (!colorGroup) {
+    throw new AppError(status.NOT_FOUND, "Color group not found");
+  }
+
+  const colorGroupCount = await prisma.productColorGroup.count({ where: { productId } });
+
+  if (colorGroupCount <= 1) {
+    throw new AppError(status.BAD_REQUEST, "A product must have at least one color group");
+  }
+
+  await prisma.productColorGroup.delete({ where: { id: colorGroupId } });
+};
+
+const addVariant = async (
+  productId: string,
+  colorGroupId: string,
+  payload: ICreateVariantInput,
+) => {
+  const colorGroup = await prisma.productColorGroup.findFirst({
+    where: { id: colorGroupId, productId },
+  });
+
+  if (!colorGroup) {
+    throw new AppError(status.NOT_FOUND, "Color group not found");
+  }
+
+  const variant = await prisma.productVariant.create({
+    data: {
+      colorGroupId,
       sku: payload.sku,
       price: payload.price,
       attributes: { create: payload.attributes },
@@ -166,7 +242,6 @@ const addVariant = async (productId: string, payload: ICreateVariantInput) => {
     },
     include: {
       attributes: true,
-      images: true,
       inventory: true,
     },
   });
@@ -176,11 +251,12 @@ const addVariant = async (productId: string, payload: ICreateVariantInput) => {
 
 const updateVariant = async (
   productId: string,
+  colorGroupId: string,
   variantId: string,
   payload: IUpdateVariantPayload,
 ) => {
   const variant = await prisma.productVariant.findFirst({
-    where: { id: variantId, productId },
+    where: { id: variantId, colorGroup: { id: colorGroupId, productId } },
   });
 
   if (!variant) {
@@ -202,7 +278,6 @@ const updateVariant = async (
     },
     include: {
       attributes: true,
-      images: true,
       inventory: true,
     },
   });
@@ -210,65 +285,62 @@ const updateVariant = async (
   return updated;
 };
 
-const deleteVariant = async (productId: string, variantId: string) => {
+const deleteVariant = async (productId: string, colorGroupId: string, variantId: string) => {
   const variant = await prisma.productVariant.findFirst({
-    where: { id: variantId, productId },
+    where: { id: variantId, colorGroup: { id: colorGroupId, productId } },
   });
 
   if (!variant) {
     throw new AppError(status.NOT_FOUND, "Variant not found");
   }
 
-  const variantCount = await prisma.productVariant.count({ where: { productId } });
+  const variantCount = await prisma.productVariant.count({ where: { colorGroupId } });
 
   if (variantCount <= 1) {
-    throw new AppError(
-      status.BAD_REQUEST,
-      "A product must have at least one variant",
-    );
+    throw new AppError(status.BAD_REQUEST, "A color group must have at least one variant");
   }
 
   await prisma.productVariant.delete({ where: { id: variantId } });
 };
 
-const uploadVariantImages = async (
+const uploadColorGroupImages = async (
   productId: string,
-  variantId: string,
+  colorGroupId: string,
   imageUrls: string[],
 ) => {
-  const variant = await prisma.productVariant.findFirst({
-    where: { id: variantId, productId },
+  const colorGroup = await prisma.productColorGroup.findFirst({
+    where: { id: colorGroupId, productId },
     include: { images: true },
   });
 
-  if (!variant) {
-    throw new AppError(status.NOT_FOUND, "Variant not found");
+  if (!colorGroup) {
+    throw new AppError(status.NOT_FOUND, "Color group not found");
   }
 
-  const hasNoPrimary = variant.images.length === 0;
+  const hasNoPrimary = colorGroup.images.length === 0;
 
   await prisma.productImage.createMany({
     data: imageUrls.map((url, index) => ({
       url,
-      variantId,
+      colorGroupId,
       isPrimary: hasNoPrimary && index === 0,
-      sortOrder: variant.images.length + index,
+      sortOrder: colorGroup.images.length + index,
     })),
   });
 
-  return prisma.productVariant.findUnique({
-    where: { id: variantId },
+  return prisma.productColorGroup.findUnique({
+    where: { id: colorGroupId },
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
 };
 
-const deleteVariantImage = async (
+const deleteColorGroupImage = async (
   productId: string,
-  variantId: string,
+  colorGroupId: string,
   imageId: string,
 ) => {
   const image = await prisma.productImage.findFirst({
-    where: { id: imageId, variantId, variant: { productId } },
+    where: { id: imageId, colorGroupId, colorGroup: { productId } },
   });
 
   if (!image) {
@@ -277,10 +349,9 @@ const deleteVariantImage = async (
 
   await prisma.productImage.delete({ where: { id: imageId } });
 
-  // If deleted image was primary, promote the next one
   if (image.isPrimary) {
     const nextImage = await prisma.productImage.findFirst({
-      where: { variantId },
+      where: { colorGroupId },
       orderBy: { sortOrder: "asc" },
     });
 
@@ -299,10 +370,12 @@ export const ProductService = {
   getProductById,
   updateProduct,
   deleteProduct,
+  addColorGroup,
+  deleteColorGroup,
   addVariant,
   updateVariant,
   deleteVariant,
-  uploadVariantImages,
-  deleteVariantImage,
+  uploadColorGroupImages,
+  deleteColorGroupImage,
 };
 

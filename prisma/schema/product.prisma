@@ -15,7 +15,7 @@ model Product {
   brand          Brand                  @relation(fields: [brandId], references: [id])
   category       Category               @relation(fields: [categoryId], references: [id])
 
-  variants       ProductVariant[]
+  colorGroups    ProductColorGroup[]
   specifications ProductSpecification[]
   reviews        Review[]
   watchlistItems WatchListItem[]
@@ -41,24 +41,37 @@ model ProductSpecification {
   @@map("product_specifications")
 }
 
-model ProductVariant {
-  id        String                   @id @default(uuid())
+model ProductColorGroup {
+  id         String           @id @default(uuid())
 
-  productId String
-  sku       String?                  @unique
-  price     Float
+  productId  String
+  colorValue String
 
-  product    Product                  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  attributes ProductVariantAttribute[]
+  product    Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
   images     ProductImage[]
-  inventory  Inventory?
-  cartItems  CartItem[]
-  orderItems OrderItem[]
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  variants   ProductVariant[]
 
   @@index([productId])
+  @@map("product_color_groups")
+}
+
+model ProductVariant {
+  id           String                   @id @default(uuid())
+
+  colorGroupId String
+  sku          String?                  @unique
+  price        Float
+
+  colorGroup   ProductColorGroup        @relation(fields: [colorGroupId], references: [id], onDelete: Cascade)
+  attributes   ProductVariantAttribute[]
+  inventory    Inventory?
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([colorGroupId])
   @@map("product_variants")
 }
 
@@ -76,16 +89,16 @@ model ProductVariantAttribute {
 }
 
 model ProductImage {
-  id        String         @id @default(uuid())
-  url       String
-  altText   String?
-  isPrimary Boolean        @default(false)
-  sortOrder Int            @default(0)
+  id           String            @id @default(uuid())
+  url          String
+  altText      String?
+  isPrimary    Boolean           @default(false)
+  sortOrder    Int               @default(0)
 
-  variantId String
-  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  colorGroupId String
+  colorGroup   ProductColorGroup @relation(fields: [colorGroupId], references: [id], onDelete: Cascade)
 
-  @@index([variantId])
+  @@index([colorGroupId])
   @@map("product_images")
 }
 

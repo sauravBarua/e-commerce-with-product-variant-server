@@ -15,6 +15,11 @@ export interface ICreateVariantInput {
   attributes: IProductVariantAttributeInput[];
 }
 
+export interface ICreateColorGroupInput {
+  colorValue: string;
+  variants: ICreateVariantInput[];
+}
+
 export interface ICreateProductPayload {
   name: string;
   description: string;
@@ -22,7 +27,7 @@ export interface ICreateProductPayload {
   categoryId: string;
   isActive?: boolean;
   specifications?: IProductSpecificationInput[];
-  variants: ICreateVariantInput[];
+  colorGroups: ICreateColorGroupInput[];
 }
 
 export interface IUpdateProductPayload {

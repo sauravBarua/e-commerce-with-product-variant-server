@@ -19,6 +19,11 @@ const createVariantSchema = z.object({
     .min(1, "At least one attribute is required"),
 });
 
+const createColorGroupSchema = z.object({
+  colorValue: z.string().min(1, "Color value is required"),
+  variants: z.array(createVariantSchema).min(1, "At least one variant is required"),
+});
+
 export const createProductZodSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Description is required"),
@@ -26,7 +31,7 @@ export const createProductZodSchema = z.object({
   categoryId: z.string().uuid("Invalid category ID"),
   isActive: z.boolean().optional(),
   specifications: z.array(productSpecificationSchema).optional(),
-  variants: z.array(createVariantSchema).min(1, "At least one variant is required"),
+  colorGroups: z.array(createColorGroupSchema).min(1, "At least one color group is required"),
 });
 
 export const updateProductZodSchema = z.object({
@@ -35,6 +40,11 @@ export const updateProductZodSchema = z.object({
   brandId: z.string().uuid().optional(),
   categoryId: z.string().uuid().optional(),
   isActive: z.boolean().optional(),
+});
+
+export const createColorGroupZodSchema = z.object({
+  colorValue: z.string().min(1, "Color value is required"),
+  variants: z.array(createVariantSchema).min(1, "At least one variant is required"),
 });
 
 export const createVariantZodSchema = z.object({
