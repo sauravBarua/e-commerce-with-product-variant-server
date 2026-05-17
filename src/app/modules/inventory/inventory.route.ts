@@ -3,16 +3,9 @@ import { Role } from "../../../generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { InventoryController } from "./inventory.controller";
-import { createInventoryZodSchema, updateInventoryZodSchema } from "./inventory.validation";
+import { updateInventoryZodSchema } from "./inventory.validation";
 
 const router = Router();
-
-router.post(
-  "/",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  validateRequest(createInventoryZodSchema),
-  InventoryController.createInventory,
-);
 
 router.get(
   "/",
@@ -21,13 +14,13 @@ router.get(
 );
 
 router.get(
-  "/:productId",
+  "/:variantId",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  InventoryController.getInventoryByProductId,
+  InventoryController.getInventoryByVariantId,
 );
 
 router.patch(
-  "/:productId",
+  "/:variantId",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(updateInventoryZodSchema),
   InventoryController.updateInventory,

@@ -5,17 +5,6 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { InventoryService } from "./inventory.service";
 
-const createInventory = catchAsync(async (req: Request, res: Response) => {
-  const inventory = await InventoryService.createInventory(req.body);
-
-  sendResponse(res, {
-    httpStatusCode: status.CREATED,
-    success: true,
-    message: "Inventory created successfully",
-    data: inventory,
-  });
-});
-
 const getAllInventory = catchAsync(async (req: Request, res: Response) => {
   const result = await InventoryService.getAllInventory(req.query as IQueryParams);
 
@@ -28,8 +17,8 @@ const getAllInventory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getInventoryByProductId = catchAsync(async (req: Request, res: Response) => {
-  const inventory = await InventoryService.getInventoryByProductId(req.params.productId as string);
+const getInventoryByVariantId = catchAsync(async (req: Request, res: Response) => {
+  const inventory = await InventoryService.getInventoryByVariantId(req.params.variantId as string);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -40,7 +29,7 @@ const getInventoryByProductId = catchAsync(async (req: Request, res: Response) =
 });
 
 const updateInventory = catchAsync(async (req: Request, res: Response) => {
-  const inventory = await InventoryService.updateInventory(req.params.productId as string, req.body);
+  const inventory = await InventoryService.updateInventory(req.params.variantId as string, req.body);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -51,8 +40,7 @@ const updateInventory = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const InventoryController = {
-  createInventory,
   getAllInventory,
-  getInventoryByProductId,
+  getInventoryByVariantId,
   updateInventory,
 };

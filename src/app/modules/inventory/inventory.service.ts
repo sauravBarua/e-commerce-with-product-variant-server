@@ -3,84 +3,63 @@ import AppError from "../../errorHelpers/AppError";
 import { IQueryParams } from "../../interfaces/query.interface";
 import { prisma } from "../../lib/prisma";
 import { QueryBuilder } from "../../utils/QueryBuilder";
-import { ICreateInventoryPayload, IUpdateInventoryPayload } from "./inventory.interface";
+import { IUpdateInventoryPayload } from "./inventory.interface";
 
-const createInventory = async (payload: ICreateInventoryPayload) => {
-  const product = await prisma.product.findUnique({
-    where: { id: payload.productId },
-  });
-  if (!product) {
-    throw new AppError(status.NOT_FOUND, "Product not found");
-  }
-
-  const existing = await prisma.inventory.findUnique({
-    where: { productId: payload.productId },
-  });
-  if (existing) {
-    throw new AppError(status.CONFLICT, "Inventory already exists for this product");
-  }
-
-  if (payload.sku) {
-    const skuExists = await prisma.inventory.findUnique({
-      where: { sku: payload.sku },
-    });
-    if (skuExists) {
-      throw new AppError(status.CONFLICT, "SKU already in use");
-    }
-  }
-
-  return prisma.inventory.create({ data: payload, include: { product: { select: { id: true, name: true, price: true } } } });
+const variantInclude = {
+  variant: {
+    include: {
+      attributes: true,
+      colorGroup: {
+        include: {
+          product: { select: { id: true, name: true, slug: true } },
+        },
+      },
+    },
+  },
 };
 
 const getAllInventory = async (queryParams: IQueryParams) => {
   const result = await new QueryBuilder(prisma.inventory, queryParams, {
-    searchableFields: ["sku", "warehouseLocation"],
+    searchableFields: ["warehouseLocation"],
   })
     .search()
     .filter()
     .sort()
     .paginate()
-    .execute({ include: { product: { select: { id: true, name: true, price: true } } } });
+    .execute({ include: variantInclude });
 
   return result;
 };
 
-const getInventoryByProductId = async (productId: string) => {
+const getInventoryByVariantId = async (variantId: string) => {
   const inventory = await prisma.inventory.findUnique({
-    where: { productId },
-    include: { product: { select: { id: true, name: true, price: true } } },
+    where: { variantId },
+    include: variantInclude,
   });
 
   if (!inventory) {
-    throw new AppError(status.NOT_FOUND, "Inventory not found for this product");
+    throw new AppError(status.NOT_FOUND, "Inventory not found for this variant");
   }
 
   return inventory;
 };
 
-const updateInventory = async (productId: string, payload: IUpdateInventoryPayload) => {
-  const existing = await prisma.inventory.findUnique({ where: { productId } });
-  if (!existing) {
-    throw new AppError(status.NOT_FOUND, "Inventory not found for this product");
-  }
+const updateInventory = async (variantId: string, payload: IUpdateInventoryPayload) => {
+  const existing = await prisma.inventory.findUnique({ where: { variantId } });
 
-  if (payload.sku && payload.sku !== existing.sku) {
-    const skuExists = await prisma.inventory.findUnique({ where: { sku: payload.sku } });
-    if (skuExists) {
-      throw new AppError(status.CONFLICT, "SKU already in use");
-    }
+  if (!existing) {
+    throw new AppError(status.NOT_FOUND, "Inventory not found for this variant");
   }
 
   return prisma.inventory.update({
-    where: { productId },
+    where: { variantId },
     data: payload,
-    include: { product: { select: { id: true, name: true, price: true } } },
+    include: variantInclude,
   });
 };
 
 export const InventoryService = {
-  createInventory,
   getAllInventory,
-  getInventoryByProductId,
+  getInventoryByVariantId,
   updateInventory,
 };
