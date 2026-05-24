@@ -3,8 +3,10 @@ model Product {
   name           String
   slug           String?                @unique
   description    String
-  averageRating  Float                  @default(0)
+  averageRating  Decimal @db.Decimal(10, 2)                  @default(0)
   isActive       Boolean                @default(true)
+  isDeleted      Boolean                @default(false)
+  deletedAt      DateTime?
 
   brandId        String
   categoryId     String
@@ -19,11 +21,13 @@ model Product {
   specifications ProductSpecification[]
   reviews        Review[]
   watchlistItems WatchListItem[]
+  variants       ProductVariant[]
 
   @@index([brandId])
   @@index([categoryId])
   @@index([averageRating])
   @@index([isActive])
+  @@index([isDeleted])
   @@map("products")
 }
 
@@ -60,18 +64,21 @@ model ProductVariant {
 
   colorGroupId String
   sku          String?                  @unique
-  price        Float
+  price        Decimal @db.Decimal(10, 2)
 
   colorGroup   ProductColorGroup        @relation(fields: [colorGroupId], references: [id], onDelete: Cascade)
   attributes   ProductVariantAttribute[]
   inventory    Inventory?
   cartItems    CartItem[]
   orderItems   OrderItem[]
+  productId    String
+  product   Product @relation(fields: [productId], references: [id])
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@index([colorGroupId])
+  @@index([productId])
   @@map("product_variants")
 }
 

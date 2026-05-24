@@ -9,7 +9,7 @@ import { ICreateReviewPayload, IUpdateReviewPayload } from "./review.interface";
 
 const reviewInclude = {
   customer: { select: { id: true, name: true } },
-  product: { select: { id: true, name: true, images: true } },
+  product: { select: { id: true, name: true } },
 };
 
 const createReview = async (user: IRequestUser, payload: ICreateReviewPayload) => {
@@ -20,7 +20,15 @@ const createReview = async (user: IRequestUser, payload: ICreateReviewPayload) =
 
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { orderItems: true },
+    include: {
+      orderItems: {
+        include: {
+          variant: {
+            include: { colorGroup: true },
+          },
+        },
+      },
+    },
   });
 
   if (!order) throw new AppError(status.NOT_FOUND, "Order not found");
@@ -29,7 +37,7 @@ const createReview = async (user: IRequestUser, payload: ICreateReviewPayload) =
   if (order.status !== "DELIVERED")
     throw new AppError(status.BAD_REQUEST, "You can only review a delivered order");
 
-  const hasProduct = order.orderItems.some((item) => item.productId === productId);
+  const hasProduct = order.orderItems.some((item) => item.variant.colorGroup.productId === productId);
   if (!hasProduct)
     throw new AppError(status.BAD_REQUEST, "This product is not part of the order");
 

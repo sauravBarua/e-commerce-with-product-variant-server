@@ -37,7 +37,8 @@ const createAdmin = async (payload: ICreateAdminPayload) => {
     const admin = await prisma.admin.create({
       data: {
         userId: userData.user.id,
-        ...payload.admin,
+        name: payload.admin.name,
+        contactNumber: payload.admin.contactNumber,
       },
       include: {
         user: {

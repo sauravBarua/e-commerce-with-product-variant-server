@@ -3,7 +3,7 @@ model Review {
   customerId String
   productId  String
   orderId    String   @unique
-  rating     Float
+  rating     Decimal @db.Decimal(3, 2)
   comment    String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -13,5 +13,6 @@ model Review {
 
   @@index([customerId])
   @@index([productId])
+  @@unique([customerId, productId])
   @@map("reviews")
 }

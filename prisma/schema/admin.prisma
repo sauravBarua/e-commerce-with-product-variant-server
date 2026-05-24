@@ -1,7 +1,6 @@
 model Admin {
   id            String    @id @default(uuid())
   name          String
-  email         String    @unique
   contactNumber String?
   isDeleted     Boolean   @default(false)
   createdAt     DateTime  @default(now())
@@ -10,7 +9,6 @@ model Admin {
   userId        String    @unique
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([email])
   @@index([isDeleted])
   @@map("admins")
 }

@@ -1,19 +1,26 @@
 -- CreateEnum
+CREATE TYPE "AddressType" AS ENUM ('SHIPPING', 'BILLING');
+
+-- CreateEnum
 CREATE TYPE "Role" AS ENUM ('SUPER_ADMIN', 'ADMIN', 'USER', 'CUSTOMER');
 
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('BLOCKED', 'DELETED', 'ACTIVE');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'RETURNED', 'REFUNDED');
+CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PROCESSING', 'PACKED', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'RETURNED', 'REFUNDED');
 
 -- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID', 'FAILED', 'REFUNDED');
+CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID', 'FAILED', 'REFUNDED', 'PARTIALLY_REFUNDED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "ShipmentStatus" AS ENUM ('PENDING', 'DISPATCHED', 'IN_TRANSIT', 'DELIVERED', 'FAILED', 'RETURNED');
 
 -- CreateTable
 CREATE TABLE "addresses" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "type" "AddressType" NOT NULL DEFAULT 'SHIPPING',
     "street" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
@@ -29,7 +36,6 @@ CREATE TABLE "addresses" (
 CREATE TABLE "admins" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
     "contactNumber" TEXT,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -161,7 +167,6 @@ CREATE TABLE "customers" (
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "email" TEXT NOT NULL,
 
     CONSTRAINT "customers_pkey" PRIMARY KEY ("id")
 );
@@ -173,7 +178,7 @@ CREATE TABLE "orders" (
     "addressId" TEXT,
     "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
     "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
-    "totalAmount" DOUBLE PRECISION NOT NULL,
+    "totalAmount" DECIMAL(10,2) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -186,7 +191,7 @@ CREATE TABLE "order_items" (
     "orderId" TEXT NOT NULL,
     "variantId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "priceAtOrder" DOUBLE PRECISION NOT NULL,
+    "priceAtOrder" DECIMAL(10,2) NOT NULL,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
 );
@@ -195,7 +200,7 @@ CREATE TABLE "order_items" (
 CREATE TABLE "payments" (
     "id" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
-    "amount" DOUBLE PRECISION NOT NULL,
+    "amount" DECIMAL(10,2) NOT NULL,
     "transactionId" TEXT NOT NULL,
     "status" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
     "paymentGatewayData" JSONB,
@@ -213,8 +218,10 @@ CREATE TABLE "products" (
     "name" TEXT NOT NULL,
     "slug" TEXT,
     "description" TEXT NOT NULL,
-    "averageRating" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "averageRating" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "deletedAt" TIMESTAMP(3),
     "brandId" TEXT NOT NULL,
     "categoryId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -248,7 +255,8 @@ CREATE TABLE "product_variants" (
     "id" TEXT NOT NULL,
     "colorGroupId" TEXT NOT NULL,
     "sku" TEXT,
-    "price" DOUBLE PRECISION NOT NULL,
+    "price" DECIMAL(10,2) NOT NULL,
+    "productId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -297,12 +305,29 @@ CREATE TABLE "reviews" (
     "customerId" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
-    "rating" DOUBLE PRECISION NOT NULL,
+    "rating" DECIMAL(3,2) NOT NULL,
     "comment" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "shipments" (
+    "id" TEXT NOT NULL,
+    "orderId" TEXT NOT NULL,
+    "carrier" TEXT,
+    "trackingNumber" TEXT,
+    "shippingCost" DECIMAL(10,2),
+    "status" "ShipmentStatus" NOT NULL DEFAULT 'PENDING',
+    "shippedAt" TIMESTAMP(3),
+    "deliveredAt" TIMESTAMP(3),
+    "estimatedDate" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "shipments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -335,13 +360,7 @@ CREATE INDEX "addresses_city_idx" ON "addresses"("city");
 CREATE INDEX "addresses_country_idx" ON "addresses"("country");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "admins_email_key" ON "admins"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "admins_userId_key" ON "admins"("userId");
-
--- CreateIndex
-CREATE INDEX "admins_email_idx" ON "admins"("email");
 
 -- CreateIndex
 CREATE INDEX "admins_isDeleted_idx" ON "admins"("isDeleted");
@@ -401,9 +420,6 @@ CREATE INDEX "categories_parentId_idx" ON "categories"("parentId");
 CREATE UNIQUE INDEX "customers_userId_key" ON "customers"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "customers_email_key" ON "customers"("email");
-
--- CreateIndex
 CREATE INDEX "customers_userId_idx" ON "customers"("userId");
 
 -- CreateIndex
@@ -458,6 +474,9 @@ CREATE INDEX "products_averageRating_idx" ON "products"("averageRating");
 CREATE INDEX "products_isActive_idx" ON "products"("isActive");
 
 -- CreateIndex
+CREATE INDEX "products_isDeleted_idx" ON "products"("isDeleted");
+
+-- CreateIndex
 CREATE INDEX "product_specifications_productId_idx" ON "product_specifications"("productId");
 
 -- CreateIndex
@@ -468,6 +487,9 @@ CREATE UNIQUE INDEX "product_variants_sku_key" ON "product_variants"("sku");
 
 -- CreateIndex
 CREATE INDEX "product_variants_colorGroupId_idx" ON "product_variants"("colorGroupId");
+
+-- CreateIndex
+CREATE INDEX "product_variants_productId_idx" ON "product_variants"("productId");
 
 -- CreateIndex
 CREATE INDEX "product_variant_attributes_variantId_idx" ON "product_variant_attributes"("variantId");
@@ -486,6 +508,12 @@ CREATE INDEX "reviews_customerId_idx" ON "reviews"("customerId");
 
 -- CreateIndex
 CREATE INDEX "reviews_productId_idx" ON "reviews"("productId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "reviews_customerId_productId_key" ON "reviews"("customerId", "productId");
+
+-- CreateIndex
+CREATE INDEX "shipments_orderId_idx" ON "shipments"("orderId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "watch_lists_customerId_key" ON "watch_lists"("customerId");
@@ -557,6 +585,9 @@ ALTER TABLE "product_color_groups" ADD CONSTRAINT "product_color_groups_productI
 ALTER TABLE "product_variants" ADD CONSTRAINT "product_variants_colorGroupId_fkey" FOREIGN KEY ("colorGroupId") REFERENCES "product_color_groups"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "product_variants" ADD CONSTRAINT "product_variants_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "product_variant_attributes" ADD CONSTRAINT "product_variant_attributes_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "product_variants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -573,6 +604,9 @@ ALTER TABLE "reviews" ADD CONSTRAINT "reviews_orderId_fkey" FOREIGN KEY ("orderI
 
 -- AddForeignKey
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "shipments" ADD CONSTRAINT "shipments_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "watch_lists" ADD CONSTRAINT "watch_lists_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -41,7 +41,6 @@ const registerCustomer = async (payload: IRegistercustomerPayload) => {
         data: {
           userId: data.user.id,
           name: payload.name,
-          email: payload.email,
         },
       });
 

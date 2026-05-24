@@ -13,7 +13,9 @@ enum UserStatus {
 
 enum OrderStatus {
   PENDING
+  CONFIRMED
   PROCESSING
+  PACKED
   SHIPPED
   DELIVERED
   CANCELLED
@@ -26,4 +28,15 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+  PARTIALLY_REFUNDED
+  CANCELLED
+}
+
+enum ShipmentStatus {
+  PENDING
+  DISPATCHED
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+  RETURNED
 }

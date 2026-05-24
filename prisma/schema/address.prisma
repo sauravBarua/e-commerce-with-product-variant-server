@@ -1,6 +1,12 @@
+enum AddressType {
+  SHIPPING
+  BILLING
+}
+
 model Address {
-  id         String   @id @default(uuid())
+  id         String      @id @default(uuid())
   userId     String
+  type       AddressType @default(SHIPPING)
   street     String
   city       String
   state      String
