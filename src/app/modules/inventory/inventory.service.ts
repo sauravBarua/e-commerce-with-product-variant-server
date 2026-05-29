@@ -3,7 +3,7 @@ import AppError from "../../errorHelpers/AppError";
 import { IQueryParams } from "../../interfaces/query.interface";
 import { prisma } from "../../lib/prisma";
 import { QueryBuilder } from "../../utils/QueryBuilder";
-import { IUpdateInventoryPayload } from "./inventory.interface";
+import { IAddQuantityPayload, IUpdateInventoryPayload } from "./inventory.interface";
 
 const variantInclude = {
   variant: {
@@ -58,8 +58,29 @@ const updateInventory = async (variantId: string, payload: IUpdateInventoryPaylo
   });
 };
 
+const addQuantity = async (variantId: string, payload: IAddQuantityPayload) => {
+  const existing = await prisma.inventory.findUnique({ where: { variantId } });
+
+  if (!existing) {
+    throw new AppError(status.NOT_FOUND, "Inventory not found for this variant");
+  }
+
+  const { quantity, reservedQuantity, ...rest } = payload;
+
+  return prisma.inventory.update({
+    where: { variantId },
+    data: {
+      quantity: { increment: quantity },
+      ...(reservedQuantity !== undefined && { reservedQuantity: { increment: reservedQuantity } }),
+      ...rest,
+    },
+    include: variantInclude,
+  });
+};
+
 export const InventoryService = {
   getAllInventory,
   getInventoryByVariantId,
   updateInventory,
+  addQuantity,
 };

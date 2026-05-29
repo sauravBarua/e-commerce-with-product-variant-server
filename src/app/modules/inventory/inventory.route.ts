@@ -3,7 +3,7 @@ import { Role } from "../../../generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { InventoryController } from "./inventory.controller";
-import { updateInventoryZodSchema } from "./inventory.validation";
+import { updateInventoryZodSchema, addQuantityZodSchema } from "./inventory.validation";
 
 const router = Router();
 
@@ -24,6 +24,13 @@ router.patch(
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(updateInventoryZodSchema),
   InventoryController.updateInventory,
+);
+
+router.patch(
+  "/:variantId/add-quantity",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  validateRequest(addQuantityZodSchema),
+  InventoryController.addQuantity,
 );
 
 export const InventoryRoutes = router;

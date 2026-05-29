@@ -28,10 +28,10 @@ router.get("/", BrandController.getAllBrands);
 //   BrandController.updateBrand,
 // );
 
-// router.delete(
-//   "/:id",
-//   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-//   BrandController.deleteBrand,
-// );
+router.delete(
+  "/:id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  BrandController.deleteBrand,
+);
 
 export const BrandRoutes = router;

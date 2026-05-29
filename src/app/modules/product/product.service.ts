@@ -25,48 +25,70 @@ const createProduct = async (payload: ICreateProductPayload) => {
 
   const slug = generateSlug(name);
 
-  const product = await prisma.product.create({
-    data: {
-      name,
-      slug,
-      description,
-      brandId,
-      categoryId,
-      isActive: isActive ?? true,
-      specifications: specifications?.length
-        ? { create: specifications }
-        : undefined,
-      colorGroups: {
-        create: colorGroups.map((cg) => ({
-          colorValue: cg.colorValue,
-          variants: {
-            create: cg.variants.map((v) => ({
+  const product = await prisma.$transaction(async (tx) => {
+    // Step 1: create the product (and specifications)
+    const created = await tx.product.create({
+      data: {
+        name,
+        slug,
+        description,
+        brandId,
+        categoryId,
+        isActive: isActive ?? true,
+        specifications: specifications?.length
+          ? { create: specifications }
+          : undefined,
+      },
+    });
+
+    // Step 2: create all color groups in parallel
+    const createdColorGroups = await Promise.all(
+      colorGroups.map((cg) =>
+        tx.productColorGroup.create({
+          data: { productId: created.id, colorValue: cg.colorValue },
+        }),
+      ),
+    );
+
+    // Step 3: create all variants in parallel across all color groups
+    await Promise.all(
+      colorGroups.flatMap((cg, i) =>
+        cg.variants.map((v) =>
+          tx.productVariant.create({
+            data: {
+              productId: created.id,
+              colorGroupId: createdColorGroups[i].id,
               sku: v.sku,
               price: v.price,
               attributes: { create: v.attributes },
               inventory: { create: { quantity: 0, reservedQuantity: 0 } },
-            })),
-          },
-        })),
-      },
-    },
-    include: {
-      brand: true,
-      category: true,
-      specifications: true,
-      colorGroups: {
-        include: {
-          images: true,
-          variants: {
-            include: {
-              attributes: true,
-              inventory: true,
+            },
+          }),
+        ),
+      ),
+    );
+
+    // Step 4: return the fully populated product
+    return tx.product.findUniqueOrThrow({
+      where: { id: created.id },
+      include: {
+        brand: true,
+        category: true,
+        specifications: true,
+        colorGroups: {
+          include: {
+            images: true,
+            variants: {
+              include: {
+                attributes: true,
+                inventory: true,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  }, { timeout: 15000 });
 
   return product;
 };
@@ -180,6 +202,7 @@ const addColorGroup = async (productId: string, payload: ICreateColorGroupInput)
       colorValue: payload.colorValue,
       variants: {
         create: payload.variants.map((v) => ({
+          productId,
           sku: v.sku,
           price: v.price,
           attributes: { create: v.attributes },
@@ -234,6 +257,7 @@ const addVariant = async (
 
   const variant = await prisma.productVariant.create({
     data: {
+      productId,
       colorGroupId,
       sku: payload.sku,
       price: payload.price,
