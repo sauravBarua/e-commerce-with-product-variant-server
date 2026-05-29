@@ -14,9 +14,6 @@ const getDashboardStatsData = async (user : IRequestUser) => {
         case Role.ADMIN:
             statsData = getAdminStatsData();
             break;
-        case Role.CUSTOMER:
-            statsData = getCustomerStatsData(user);
-            break;
         default:
             throw new AppError(status.BAD_REQUEST, "Invalid user role");
     }
@@ -111,21 +108,21 @@ const getProductStatsData = async (productId: string) => {
         where: { productId: productData.id }
     });
 
-    // Count unique customers via orderItems — Order has no direct productId
+    // Count unique customers via orderItems — OrderItem links to variant which has productId
     const orderItems = await prisma.orderItem.findMany({
-        where: { productId: productData.id },
+        where: { variant: { productId: productData.id } },
         select: { order: { select: { customerId: true } } }
     });
     const uniqueCustomerCount = new Set(orderItems.map(i => i.order.customerId)).size;
 
     const orderCount = await prisma.order.count({
-        where: { orderItems: { some: { productId: productData.id } } }
+        where: { orderItems: { some: { variant: { productId: productData.id } } } }
     });
 
     const totalRevenue = await prisma.payment.aggregate({
         _sum: { amount: true },
         where: {
-            order: { orderItems: { some: { productId: productData.id } } },
+            order: { orderItems: { some: { variant: { productId: productData.id } } } },
             status: PaymentStatus.PAID
         }
     });
@@ -133,7 +130,7 @@ const getProductStatsData = async (productId: string) => {
     const orderStatusDist = await prisma.order.groupBy({
         by: ["status"],
         _count: { id: true },
-        where: { orderItems: { some: { productId: productData.id } } }
+        where: { orderItems: { some: { variant: { productId: productData.id } } } }
     });
 
     return {
@@ -146,9 +143,9 @@ const getProductStatsData = async (productId: string) => {
 }
 
 const getCustomerStatsData = async (user : IRequestUser) => {
-    const customerData = await prisma.customer.findUniqueOrThrow({
+    const customerData = await prisma.customer.findFirstOrThrow({
         where: {
-            email: user.email
+            user: { email: user.email }
         }
     });
 
@@ -245,6 +242,7 @@ const getBarChartData = async () => {
 export const StatsService = {
     getDashboardStatsData,
     getProductStatsData,
+    getCustomerStatsData,
     getOrderStatusData,
     getOrderPaymentData,
 }
