@@ -142,7 +142,7 @@ const getProductById = async (id: string) => {
       },
       reviews: {
         include: {
-          customer: { select: { id: true, name: true, email: true } },
+          customer: { select: { id: true, name: true } },
         },
         orderBy: { createdAt: "desc" },
         take: 10,
