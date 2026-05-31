@@ -59,7 +59,21 @@ const createCheckoutSession = catchAsync(async (req: Request, res: Response) => 
     });
 });
 
+const verifySession = catchAsync(async (req: Request, res: Response) => {
+    const { sessionId } = req.params;
+
+    const result = await PaymentService.verifySession(sessionId);
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Session verified",
+        data: result,
+    });
+});
+
 export const PaymentController = {
     handleStripeWebhookEvent,
     createCheckoutSession,
+    verifySession,
 }

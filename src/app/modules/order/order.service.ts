@@ -24,7 +24,7 @@ const orderInclude = {
     },
   },
   address: true,
-  customer: { select: { id: true, name: true, email: true } },
+  customer: { select: { id: true, name: true, user: { select: { email: true } } } },
 };
 
 const createOrder = async (user: IRequestUser, payload: ICreateOrderPayload) => {
@@ -72,8 +72,8 @@ const createOrder = async (user: IRequestUser, payload: ICreateOrderPayload) => 
         );
       }
 
-      variantPrices.set(item.variantId, variant.price);
-      totalAmount += variant.price * item.quantity;
+      variantPrices.set(item.variantId, Number(variant.price));
+      totalAmount += Number(variant.price) * item.quantity;
     }
 
     const newOrder = await tx.order.create({
@@ -142,7 +142,7 @@ const getOrderById = async (id: string, user: IRequestUser) => {
     throw new AppError(status.NOT_FOUND, "Order not found");
   }
 
-  if (user.role === "CUSTOMER" && order.customer.email !== user.email) {
+  if (user.role === "CUSTOMER" && order.customer.user.email !== user.email) {
     throw new AppError(status.FORBIDDEN, "Access denied");
   }
 
@@ -192,14 +192,14 @@ const updateOrderStatus = async (id: string, payload: IUpdateOrderStatusPayload)
 const cancelOrder = async (id: string, user: IRequestUser) => {
   const order = await prisma.order.findUnique({
     where: { id },
-    include: { customer: true, orderItems: true },
+    include: { customer: { include: { user: { select: { email: true } } } }, orderItems: true },
   });
 
   if (!order) {
     throw new AppError(status.NOT_FOUND, "Order not found");
   }
 
-  if (order.customer.email !== user.email) {
+  if (order.customer.userId !== user.userId) {
     throw new AppError(status.FORBIDDEN, "Access denied");
   }
 

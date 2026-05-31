@@ -12,4 +12,11 @@ router.post(
     PaymentController.createCheckoutSession,
 );
 
+// Verify a Stripe session and update payment/order status
+router.get(
+    "/verify/:sessionId",
+    checkAuth(Role.CUSTOMER),
+    PaymentController.verifySession,
+);
+
 export const PaymentRoutes = router;

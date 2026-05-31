@@ -37,7 +37,7 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
             const order = await prisma.order.findUnique({
                 where: { id: orderId },
                 include: {
-                    customer: true,
+                    customer: { include: { user: { select: { email: true } } } },
                     orderItems: {
                         include: {
                             variant: {
@@ -80,14 +80,14 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                         pdfBuffer = await generateInvoicePdf({
                             invoiceId: order.payment?.id || paymentId,
                             customerName: order.customer.name,
-                            customerEmail: order.customer.email,
+                            customerEmail: order.customer.user.email,
                             orderItems: order.orderItems.map((i) => ({
                                 name: i.variant.colorGroup.product.name,
                                 quantity: i.quantity,
-                                price: i.priceAtOrder,
+                                price: Number(i.priceAtOrder),
                             })),
                             orderDate: order.createdAt.toString(),
-                            amount: order.payment?.amount || 0,
+                            amount: Number(order.payment?.amount) || 0,
                             transactionId: order.payment?.transactionId || "",
                             paymentDate: new Date().toISOString()
                         });
@@ -126,7 +126,7 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
             if (session.payment_status === "paid" && result.invoiceUrl) {
                 try {
                     await sendEmail({
-                        to: order.customer.email,
+                        to: order.customer.user.email,
                         subject: `Payment Confirmation & Invoice - Order #${orderId}`,
                         templateName: "invoice",
                         templateData: {
@@ -137,7 +137,7 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                             orderItems: order.orderItems.map((i) => ({
                                 name: i.variant.colorGroup.product.name,
                                 quantity: i.quantity,
-                                price: i.priceAtOrder,
+                                price: Number(i.priceAtOrder),
                             })),
                             orderDate: new Date(order.createdAt).toLocaleDateString(),
                             amount: order.payment?.amount || 0,
@@ -152,7 +152,7 @@ const handlerStripeWebhookEvent = async (event : Stripe.Event) =>{
                         ]
                     });
 
-                    console.log(`✅ Invoice email sent to ${order.customer.email}`);
+                    console.log(`✅ Invoice email sent to ${order.customer.user.email}`);
                 } catch (emailError) {
                     console.error("❌ Error sending invoice email:", emailError);
                     // Log but don't fail the payment if email fails
@@ -187,7 +187,7 @@ const createCheckoutSession = async (orderId: string, userId: string) => {
     const order = await prisma.order.findUnique({
         where: { id: orderId },
         include: {
-            customer: true,
+            customer: { include: { user: { select: { email: true } } } },
             orderItems: {
                 include: {
                     variant: {
@@ -223,7 +223,7 @@ const createCheckoutSession = async (orderId: string, userId: string) => {
                     name: item.variant.colorGroup.product.name,
                     ...(image && { images: [image] }),
                 },
-                unit_amount: Math.round(item.priceAtOrder * 100),
+                unit_amount: Math.round(Number(item.priceAtOrder) * 100),
             },
             quantity: item.quantity,
         };
@@ -260,7 +260,38 @@ const createCheckoutSession = async (orderId: string, userId: string) => {
     return { checkoutUrl: session.url };
 };
 
+const verifySession = async (sessionId: string) => {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (!session.metadata?.orderId || !session.metadata?.paymentId) {
+        throw new Error("Invalid session metadata");
+    }
+
+    const { orderId, paymentId } = session.metadata;
+
+    if (session.payment_status !== "paid") {
+        return { paid: false };
+    }
+
+    // Idempotent — only update if still pending
+    await prisma.payment.updateMany({
+        where: { id: paymentId, status: { not: PaymentStatus.PAID } },
+        data: {
+            status: PaymentStatus.PAID,
+            transactionId: session.id,
+        },
+    });
+
+    await prisma.order.updateMany({
+        where: { id: orderId, paymentStatus: { not: PaymentStatus.PAID } },
+        data: { paymentStatus: PaymentStatus.PAID },
+    });
+
+    return { paid: true, orderId };
+};
+
 export const PaymentService = {
     handlerStripeWebhookEvent,
     createCheckoutSession,
+    verifySession,
 }
