@@ -44,6 +44,11 @@ const updateAddress = async (id: string, payload: IUpdateAddressPayload) => {
   return address;
 };
 
+const getMyAddresses = async (userId: string) => {
+  const addresses = await prisma.address.findMany({ where: { userId }, orderBy: { createdAt: "desc" } });
+  return addresses;
+};
+
 const deleteAddress = async (id: string) => {
   const existing = await prisma.address.findUnique({ where: { id } });
 
@@ -57,6 +62,7 @@ const deleteAddress = async (id: string) => {
 export const AddressService = {
   createAddress,
   getAllAddresses,
+  getMyAddresses,
   getAddressById,
   updateAddress,
   deleteAddress,

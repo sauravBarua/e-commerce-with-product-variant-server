@@ -16,6 +16,8 @@ router.post(
 
 router.get("/", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), AddressController.getAllAddresses);
 
+router.get("/my", checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER), AddressController.getMyAddresses);
+
 router.get("/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER), AddressController.getAddressById);
 
 router.patch(

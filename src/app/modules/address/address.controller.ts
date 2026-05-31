@@ -42,6 +42,17 @@ const getAddressById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyAddresses = catchAsync(async (req: Request, res: Response) => {
+  const addresses = await AddressService.getMyAddresses(req.user.userId);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "My addresses fetched successfully",
+    data: addresses,
+  });
+});
+
 const updateAddress = catchAsync(async (req: Request, res: Response) => {
   const address = await AddressService.updateAddress(req.params.id as string, req.body);
 
@@ -66,6 +77,7 @@ const deleteAddress = catchAsync(async (req: Request, res: Response) => {
 export const AddressController = {
   createAddress,
   getAllAddresses,
+  getMyAddresses,
   getAddressById,
   updateAddress,
   deleteAddress,
