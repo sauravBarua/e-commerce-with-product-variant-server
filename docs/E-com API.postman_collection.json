@@ -1,0 +1,1979 @@
+{
+  "info": {
+    "_postman_id": "b1191216-d3ef-4e2c-a16d-3bf0d9a45ad5",
+    "name": "E-com API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52998387",
+    "_collection_link": "https://go.postman.co/collection/52998387-b1191216-d3ef-4e2c-a16d-3bf0d9a45ad5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"saurav.barua.dev@gmail.com\",\r\n    \"name\": \"Neo Dev\",\r\n    \"password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/register",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User [Super Admin]",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"sauravnight@gmail.com\",\r\n    \"password\": \"MDFm$zQbt3Se7jRt\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User [Admin]",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User [Customer ]",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"saurav.barua.dev@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/auth/me",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "83f092d5-85ad-4e51-a731-4f8a5a1c72a7",
+                  "src": "/C:/Users/saura/Downloads/projects/image/profilepic.png"
+                },
+                {
+                  "key": "data",
+                  "value": "{\n  \"contactNumber\": \"01712345678\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Paris\",\n    \"state\": \"ile de france\",\n    \"postalCode\": \"75010\",\n    \"country\": \"France\"\n  }\n}",
+                  "type": "text",
+                  "uuid": "9d2a6e56-4f9e-4976-aabf-099a599d9f67"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/update-profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "update-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/auth/refresh-token",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"currentPassword\" : \"N12345678\",\r\n    \"newPassword\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/change-password",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/auth/logout",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"saurav.barua.dev@gmail.com\",\r\n    \"otp\" : \"610641\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/verify-email",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login with google",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login/google",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                "google"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forget Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"sauravnight@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/forget-password",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "forget-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"sauravnight@gmail.com\",\r\n    \"otp\" : \"943080\",\r\n    \"newPassword\" : \"password1234\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/reset-password",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Brand",
+      "item": [
+        {
+          "name": "Create Brand",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\n    \"name\": \"Apple\"\n}",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "src": "/C:/Users/saura/Downloads/projects/e-com-images/E-com-Logs/apple-logo.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/brands",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "brands"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Brand",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/brands",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "brands"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Brand",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\" : \"Neurology\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/brands/9b54d186-d178-4fe0-991b-36de9bbc9b3d",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "brands",
+                "9b54d186-d178-4fe0-991b-36de9bbc9b3d"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\n    \"name\": \"Smartphone\"\n}",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "src": "/C:/Users/saura/Downloads/projects/e-com-images/E-com-Logs/mobile-phone.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/categories",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Category",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/categories",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\" : \"Neurology\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/categories/d6dff6aa-8d94-4a68-a49b-b7bd6991ad26",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "categories",
+                "d6dff6aa-8d94-4a68-a49b-b7bd6991ad26"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\": \"12345678\",\r\n    \"admin\": {\r\n        \"name\": \"Admin\",\r\n        \"email\": \"admin@gmail.com\",\r\n        \"contactNumber\": \"+33 6 12 35 57 90\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/users/create-admin",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "users",
+                "create-admin"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "Create product with variants & specs",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM\",\r\n    \"description\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM with A17 Pro chip, titanium design, and 48MP camera system.\",\r\n    \"brandId\": \"dcdc4e78-5687-4969-8ac8-d47663795839\",\r\n    \"categoryId\": \"76783b7d-8525-43f9-ac7b-418a934c20ff\",\r\n    \"isActive\": true,\r\n    \"specifications\": [\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen diagonal\",\r\n            \"value\": \"6.1\\\"\"\r\n        },\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen type\",\r\n            \"value\": \"OLED Super Retina XDR\"\r\n        },\r\n        {\r\n            \"group\": \"CPU\",\r\n            \"key\": \"Chip\",\r\n            \"value\": \"A17 Pro\"\r\n        },\r\n        {\r\n            \"group\": \"Camera\",\r\n            \"key\": \"Main camera\",\r\n            \"value\": \"48 MP\"\r\n        },\r\n        {\r\n            \"group\": \"Connectivity\",\r\n            \"key\": \"Network\",\r\n            \"value\": \"5G\"\r\n        }\r\n    ],\r\n    \"colorGroups\": [\r\n        {\r\n            \"colorValue\": \"Noir Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLK-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Natural Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-NAT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Bleu Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLU-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Blanc Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-WHT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update product fields",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\n  \"name\": \"Apple MacBook Air 13 512 Go SSD 16 Go RAM Puce M5 CPU 10 cœurs GPU 8 cœurs Minuit\",\n  \"description\": \"Le MacBook Air avec puce M5 offre une vitesse fulgurante et de puissantes capacités d’IA dans un design incroyablement portable. Avec Apple Intelligence, jusqu’à 18 heures d’autonomie et un stockage SSD rapide à partir de 512 Go, vous pouvez travailler, créer et jouer comme bon vous semble, où que vous soyez.\",\n  \"price\": 999,\n  \"brandId\": \"a6901dfa-6868-4983-9e48-db76feaff322\",\n  \"categoryId\": \"0827bb5d-439e-4a51-a01a-62248263099e\"\n}",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "src": [
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/01.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/02.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/03.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/04.jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add a new variant",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\n  \"name\": \"Apple MacBook Air 13 512 Go SSD 16 Go RAM Puce M5 CPU 10 cœurs GPU 8 cœurs Minuit\",\n  \"description\": \"Le MacBook Air avec puce M5 offre une vitesse fulgurante et de puissantes capacités d’IA dans un design incroyablement portable. Avec Apple Intelligence, jusqu’à 18 heures d’autonomie et un stockage SSD rapide à partir de 512 Go, vous pouvez travailler, créer et jouer comme bon vous semble, où que vous soyez.\",\n  \"price\": 999,\n  \"brandId\": \"a6901dfa-6868-4983-9e48-db76feaff322\",\n  \"categoryId\": \"0827bb5d-439e-4a51-a01a-62248263099e\"\n}",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "src": [
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/01.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/02.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/03.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/04.jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}//products/:id/variants",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "",
+                "products",
+                ":id",
+                "variants"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload images (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "uuid": "2f0fa7b8-e68d-4f78-942c-f58b7de2a60d",
+                  "src": [
+                    "/C:/Users/saura/Downloads/projects/e-com-images/iPhone 15 Pro-White/Apple-iPhone-15-Pro-6-1-5G-Double-SIM-256-Go-Blanc-Titanium.jpg",
+                    "/C:/Users/saura/Downloads/projects/e-com-images/iPhone 15 Pro-White/Apple-iPhone-15-Pro-6-1-5G-Double-SIM-256-Go-Blanc-Titanium (1).jpg",
+                    "/C:/Users/saura/Downloads/projects/e-com-images/iPhone 15 Pro-White/Apple-iPhone-15-Pro-6-1-5G-Double-SIM-256-Go-Blanc-Titanium (2).jpg",
+                    "/C:/Users/saura/Downloads/projects/e-com-images/iPhone 15 Pro-White/Apple-iPhone-15-Pro-6-1-5G-Double-SIM-256-Go-Blanc-Titanium (3).jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/d129f047-552d-4e35-8661-2abd0f657c7c/color-groups/55640700-5c0a-42d2-870e-d485a5b61f90/images",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                "d129f047-552d-4e35-8661-2abd0f657c7c",
+                "color-groups",
+                "55640700-5c0a-42d2-870e-d485a5b61f90",
+                "images"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete variant (min 1 enforced)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\n  \"name\": \"Apple MacBook Air 13 512 Go SSD 16 Go RAM Puce M5 CPU 10 cœurs GPU 8 cœurs Minuit\",\n  \"description\": \"Le MacBook Air avec puce M5 offre une vitesse fulgurante et de puissantes capacités d’IA dans un design incroyablement portable. Avec Apple Intelligence, jusqu’à 18 heures d’autonomie et un stockage SSD rapide à partir de 512 Go, vous pouvez travailler, créer et jouer comme bon vous semble, où que vous soyez.\",\n  \"price\": 999,\n  \"brandId\": \"a6901dfa-6868-4983-9e48-db76feaff322\",\n  \"categoryId\": \"0827bb5d-439e-4a51-a01a-62248263099e\"\n}",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "src": [
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/01.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/02.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/03.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/04.jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products:id/variants/:variantId",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products:id",
+                "variants",
+                ":variantId"
+              ],
+              "variable": [
+                {
+                  "key": "variantId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete image (auto-promotes next as primary)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721",
+                  "disabled": true
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/:id/variants/:variantId/images/:imageId\tAdmin",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                ":id",
+                "variants",
+                ":variantId",
+                "images",
+                ":imageId\tAdmin"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                },
+                {
+                  "key": "variantId",
+                  "value": ""
+                },
+                {
+                  "key": "imageId\tAdmin",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update price/sku/attributes",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\n  \"name\": \"Apple MacBook Air 13 512 Go SSD 16 Go RAM Puce M5 CPU 10 cœurs GPU 8 cœurs Minuit\",\n  \"description\": \"Le MacBook Air avec puce M5 offre une vitesse fulgurante et de puissantes capacités d’IA dans un design incroyablement portable. Avec Apple Intelligence, jusqu’à 18 heures d’autonomie et un stockage SSD rapide à partir de 512 Go, vous pouvez travailler, créer et jouer comme bon vous semble, où que vous soyez.\",\n  \"price\": 999,\n  \"brandId\": \"a6901dfa-6868-4983-9e48-db76feaff322\",\n  \"categoryId\": \"0827bb5d-439e-4a51-a01a-62248263099e\"\n}",
+                  "type": "text",
+                  "uuid": "1dc15546-0889-4d0d-b524-7e8d28f3c721"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "7182142c-5f15-4aff-8ef9-26dc3c813032",
+                  "src": [
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/01.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/02.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/03.jpg",
+                    "/C:/Users/saura/Downloads/projects/images-for-e-com/Apple MacBook Air/04.jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/:id/variants/:variantId",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                ":id",
+                "variants",
+                ":variantId"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                },
+                {
+                  "key": "variantId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Products",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/9846331a-6b0a-4797-b165-3be6de303a8e",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                "9846331a-6b0a-4797-b165-3be6de303a8e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\" : \"Neurology\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/019c2965-1506-706d-8613-38de4bee68cc",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                "019c2965-1506-706d-8613-38de4bee68cc"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "item": [
+        {
+          "name": "Create address",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"street\": \"123 Main Street\",\r\n    \"city\": \"Paris\",\r\n    \"state\": \"Paris\",\r\n    \"postalCode\": \"75010\",\r\n    \"country\": \"FR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/addresses",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "addresses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My addresses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/addresses/my",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "addresses",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Review",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productId\": \"ecb29021-4db1-40ee-acf0-d3387ba3ef76\",\r\n    \"orderId\": \"2ecdf1c7-f79f-484d-908e-61f895388d22\",\r\n    \"rating\": 5,\r\n    \"comment\": \"Great product!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/reviews",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "reviews"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "Get stats",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"comment\": \"It was worth buying this product\",\r\n    \"rating\": 5,\r\n    \"productId\": \"52f1be7f-cd2c-4974-9cfc-106a817a635c\",\r\n    \"orderId\": \"02032937-3425-44ba-95e6-d7b93bcea79d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/stats",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Admin",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/doctors",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "doctors"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "Cardiology",
+                  "description": "issue",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "FEMALE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "appointmentFee[gt]",
+                  "value": "70",
+                  "description": "issue",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "appointmentFee[lte]",
+                  "value": "70",
+                  "description": "issue",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "fields",
+                  "value": "name,email",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "experience[gt]",
+                  "value": "7",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "include",
+                  "value": "specialties",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "user.role",
+                  "value": "DOCTOR",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "specialties.specialty.title",
+                  "value": "Dentist",
+                  "disabled": true
+                },
+                {
+                  "key": "specialties.specialty.title",
+                  "value": "Neurology",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "item": [
+        {
+          "name": "Get All Customers",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/customes",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "customes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "Cardiology",
+                  "description": "issue",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "FEMALE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "appointmentFee[gt]",
+                  "value": "70",
+                  "description": "issue",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "appointmentFee[lte]",
+                  "value": "70",
+                  "description": "issue",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "fields",
+                  "value": "name,email",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "experience[gt]",
+                  "value": "7",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "include",
+                  "value": "specialties",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "user.role",
+                  "value": "DOCTOR",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "specialties.specialty.title",
+                  "value": "Dentist",
+                  "disabled": true
+                },
+                {
+                  "key": "specialties.specialty.title",
+                  "value": "Neurology",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Admin",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/admins",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "admins"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "Cardiology",
+                  "description": "issue",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "FEMALE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "appointmentFee[gt]",
+                  "value": "70",
+                  "description": "issue",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "appointmentFee[lte]",
+                  "value": "70",
+                  "description": "issue",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "fields",
+                  "value": "name,email",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "experience[gt]",
+                  "value": "7",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "include",
+                  "value": "specialties",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "user.role",
+                  "value": "DOCTOR",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "specialties.specialty.title",
+                  "value": "Dentist",
+                  "disabled": true
+                },
+                {
+                  "key": "specialties.specialty.title",
+                  "value": "Neurology",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "add-quantity in Inventory",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"quantity\": 50,\r\n  \"reservedQuantity\": 0,\r\n  \"lowStockThreshold\": 5,\r\n  \"warehouseLocation\": \"Warehouse A - Shelf B3\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/inventories/0f6fdab8-808b-405a-956b-0f23c818fc21/add-quantity",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "inventories",
+                "0f6fdab8-808b-405a-956b-0f23c818fc21",
+                "add-quantity"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All inventories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/inventories",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "inventories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get inventory By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/inventories/019c614a-2362-761d-b021-771beb22a4c5",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "inventories",
+                "019c614a-2362-761d-b021-771beb22a4c5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update inventory",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"startDate\": \"2026-02-19\",\r\n        \"endDate\": \"2026-02-19\",\r\n        \"startTime\" : \"15:00\",\r\n        \"endTime\" : \"15:30\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/inventories/019c614a-2362-761d-b021-771beb22a4c5",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "inventories",
+                "019c614a-2362-761d-b021-771beb22a4c5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete inventory",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/inventories/019c614a-2362-761d-b021-771beb22a4c5",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "inventories",
+                "019c614a-2362-761d-b021-771beb22a4c5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"items\": [\r\n        {\r\n            \"variantId\": \"2bb3beef-6898-438e-a21d-48eefbc7f251\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"addressId\": \"5e075858-2504-4031-9317-c9bd7c50d1ab\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Order status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"DELIVERED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders/2ecdf1c7-f79f-484d-908e-61f895388d22/status",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                "2ecdf1c7-f79f-484d-908e-61f895388d22",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order by ID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"items\": [\r\n    { \"productId\": \"ecb29021-4db1-40ee-acf0-d3387ba3ef76\", \"quantity\": 1 }\r\n  ],\r\n  \"addressId\": \"cecd9d6c-4a29-47c9-abb4-f165ba65d55f\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders/9be3f1e3-08c3-4778-930a-a46cfdacba3e",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                "9be3f1e3-08c3-4778-930a-a46cfdacba3e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Orders",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"items\": [\r\n    { \"productId\": \"ecb29021-4db1-40ee-acf0-d3387ba3ef76\", \"quantity\": 1 }\r\n  ],\r\n  \"addressId\": \"cecd9d6c-4a29-47c9-abb4-f165ba65d55f\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders/my-orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                "my-orders"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Init Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"doctorId\": \"019daa92-74d1-70f9-a4e8-15899b80f09e\",\r\n  \"scheduleId\": \"019db55c-e76a-7659-b28b-82604bdccf11\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/payments/9be3f1e3-08c3-4778-930a-a46cfdacba3e",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "payments",
+                "9be3f1e3-08c3-4778-930a-a46cfdacba3e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "validate (local)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"doctorId\": \"019daa92-74d1-70f9-a4e8-15899b80f09e\",\r\n  \"scheduleId\": \"019db55c-e76a-7659-b28b-82604bdccf11\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/payment/success?transactionId=TXN-1743178402678",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "payment",
+                "success"
+              ],
+              "query": [
+                {
+                  "key": "transactionId",
+                  "value": "TXN-1743178402678"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payments/verify",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/payments/verify/:sessionId ",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "payments",
+                "verify",
+                ":sessionId "
+              ],
+              "variable": [
+                {
+                  "key": "sessionId ",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"variantId\": \"<uuid of a ProductVariant>\",\r\n    \"quantity\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Cart",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM\",\r\n    \"description\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM with A17 Pro chip, titanium design, and 48MP camera system.\",\r\n    \"brandId\": \"dcdc4e78-5687-4969-8ac8-d47663795839\",\r\n    \"categoryId\": \"76783b7d-8525-43f9-ac7b-418a934c20ff\",\r\n    \"isActive\": true,\r\n    \"specifications\": [\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen diagonal\",\r\n            \"value\": \"6.1\\\"\"\r\n        },\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen type\",\r\n            \"value\": \"OLED Super Retina XDR\"\r\n        },\r\n        {\r\n            \"group\": \"CPU\",\r\n            \"key\": \"Chip\",\r\n            \"value\": \"A17 Pro\"\r\n        },\r\n        {\r\n            \"group\": \"Camera\",\r\n            \"key\": \"Main camera\",\r\n            \"value\": \"48 MP\"\r\n        },\r\n        {\r\n            \"group\": \"Connectivity\",\r\n            \"key\": \"Network\",\r\n            \"value\": \"5G\"\r\n        }\r\n    ],\r\n    \"colorGroups\": [\r\n        {\r\n            \"colorValue\": \"Noir Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLK-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Natural Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-NAT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Bleu Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLU-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Blanc Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-WHT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"quantity\": 5\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart/items/<cartItemId>",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "items",
+                "<cartItemId>"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove a Cart Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM\",\r\n    \"description\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM with A17 Pro chip, titanium design, and 48MP camera system.\",\r\n    \"brandId\": \"dcdc4e78-5687-4969-8ac8-d47663795839\",\r\n    \"categoryId\": \"76783b7d-8525-43f9-ac7b-418a934c20ff\",\r\n    \"isActive\": true,\r\n    \"specifications\": [\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen diagonal\",\r\n            \"value\": \"6.1\\\"\"\r\n        },\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen type\",\r\n            \"value\": \"OLED Super Retina XDR\"\r\n        },\r\n        {\r\n            \"group\": \"CPU\",\r\n            \"key\": \"Chip\",\r\n            \"value\": \"A17 Pro\"\r\n        },\r\n        {\r\n            \"group\": \"Camera\",\r\n            \"key\": \"Main camera\",\r\n            \"value\": \"48 MP\"\r\n        },\r\n        {\r\n            \"group\": \"Connectivity\",\r\n            \"key\": \"Network\",\r\n            \"value\": \"5G\"\r\n        }\r\n    ],\r\n    \"colorGroups\": [\r\n        {\r\n            \"colorValue\": \"Noir Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLK-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Natural Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-NAT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Bleu Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLU-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Blanc Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-WHT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart/items/<cartItemId>",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "items",
+                "<cartItemId>"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM\",\r\n    \"description\": \"Apple iPhone 15 Pro 6.1\\\" 5G Double SIM with A17 Pro chip, titanium design, and 48MP camera system.\",\r\n    \"brandId\": \"dcdc4e78-5687-4969-8ac8-d47663795839\",\r\n    \"categoryId\": \"76783b7d-8525-43f9-ac7b-418a934c20ff\",\r\n    \"isActive\": true,\r\n    \"specifications\": [\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen diagonal\",\r\n            \"value\": \"6.1\\\"\"\r\n        },\r\n        {\r\n            \"group\": \"Screen\",\r\n            \"key\": \"Screen type\",\r\n            \"value\": \"OLED Super Retina XDR\"\r\n        },\r\n        {\r\n            \"group\": \"CPU\",\r\n            \"key\": \"Chip\",\r\n            \"value\": \"A17 Pro\"\r\n        },\r\n        {\r\n            \"group\": \"Camera\",\r\n            \"key\": \"Main camera\",\r\n            \"value\": \"48 MP\"\r\n        },\r\n        {\r\n            \"group\": \"Connectivity\",\r\n            \"key\": \"Network\",\r\n            \"value\": \"5G\"\r\n        }\r\n    ],\r\n    \"colorGroups\": [\r\n        {\r\n            \"colorValue\": \"Noir Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLK-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLK-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Natural Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-NAT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-NAT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Bleu Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-BLU-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-BLU-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"colorValue\": \"Blanc Titanium\",\r\n            \"variants\": [\r\n                {\r\n                    \"sku\": \"IP15P-WHT-128\",\r\n                    \"price\": 1229,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"128Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-256\",\r\n                    \"price\": 1359,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"256Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-512\",\r\n                    \"price\": 1599,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"512Go\"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    \"sku\": \"IP15P-WHT-1T\",\r\n                    \"price\": 1849,\r\n                    \"attributes\": [\r\n                        {\r\n                            \"key\": \"storage\",\r\n                            \"value\": \"1To\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "{{BASE_URL}}",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5000/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Google Auth",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/v1/auth/login/google",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "login",
+            "google"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": ""
+    },
+    {
+      "value": ""
+    }
+  ]
+}
